@@ -1,3 +1,4 @@
+package model;
 import java.util.*;
 
 public class genredata {
@@ -27,9 +28,4 @@ public class user {
     public String gender;
     public String occupation;
     public String zip;
-}
-public class movie_recommendation {
-    public static void main(String[] args){
-
-    }
 }
