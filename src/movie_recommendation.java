@@ -1,35 +1,28 @@
+import model.*;
+import java.io.*;
 import java.util.*;
-
-public class genredata {
-    public String genre;
-    public int genreid;
-}
-
-public class rating {
-    public int userid;
-    public int movieid;
-    public int rating;
-    public int timestamp;
-}
-
-public class movie {
-    public int movieid;
-    public String title;
-    public String release;
-    public String imdburl;
-
-    public ArrayList<int> genre = new ArrayList<int>();
-}
-
-public class user {
-    public int userid;
-    public int age;
-    public String gender;
-    public String occupation;
-    public String zip;
-}
 public class movie_recommendation {
     public static void main(String[] args){
 
     }
 }
+
+class parseData {
+    public static void fetchuserdata(ArrayList<user> nuser_data) throws FileNotFoundException, IOException {
+        String path = "/Users/shashwatchauhan/Documents/Assignment 01/New Folder With Items";
+        BufferedReader br = new BufferedReader(new FileReader(path));
+        StringTokenizer token;
+        String line;
+        while ((line = br.readLine()) != null) {
+            token = new StringTokenizer(line, "|");
+            user temp = new user();
+            temp.userid = Integer.parseInt(token.nextToken());
+            temp.age = Integer.parseInt(token.nextToken());
+            temp.gender = token.nextToken();
+            temp.occupation = token.nextToken();
+            temp.zip = token.nextToken();
+            nuser_data.add(temp);
+        }
+    }
+}
+
