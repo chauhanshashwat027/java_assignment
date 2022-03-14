@@ -1,28 +1,26 @@
+import parse.*;
 import model.*;
 import java.io.*;
 import java.util.*;
-public class movie_recommendation {
-    public static void main(String[] args){
 
-    }
-}
+public class movie_recommendation{
+    public static void main(String args[]) throws IOException{
+        ArrayList<user> user_data = new ArrayList<>();
+        ParseData obj1 = new ParseData();
+        obj1.getuserdata(user_data);
 
-class parseData {
-    public static void fetchuserdata(ArrayList<user> nuser_data) throws FileNotFoundException, IOException {
-        String path = "/Users/shashwatchauhan/Documents/Assignment 01/New Folder With Items";
-        BufferedReader br = new BufferedReader(new FileReader(path));
-        StringTokenizer token;
-        String line;
-        while ((line = br.readLine()) != null) {
-            token = new StringTokenizer(line, "|");
-            user temp = new user();
-            temp.userid = Integer.parseInt(token.nextToken());
-            temp.age = Integer.parseInt(token.nextToken());
-            temp.gender = token.nextToken();
-            temp.occupation = token.nextToken();
-            temp.zip = token.nextToken();
-            nuser_data.add(temp);
-        }
+        ArrayList<rating> rate_data = new ArrayList<>();
+        ParseData obj2 = new ParseData();
+        obj2.getratingdata(rate_data);
+
+        ArrayList<movie> movie_data = new ArrayList<>();
+        ParseData obj3 = new ParseData();
+        obj3.getMoviedata(movie_data);
+
+        genredata genre_data[] = new genredata[20];
+        ParseData obj4 = new ParseData();
+        obj4.getgenredata(genre_data);
+
     }
 }
 
