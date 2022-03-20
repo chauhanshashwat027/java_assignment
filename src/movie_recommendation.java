@@ -2,25 +2,33 @@ import parse.*;
 import model.*;
 import java.io.*;
 import java.util.*;
+import java.util.Map;
 
 public class movie_recommendation{
     public static void main(String args[]) throws IOException{
-        ArrayList<user> user_data = new ArrayList<>();
-        ParseData obj1 = new ParseData();
-        obj1.getuserdata(user_data);
+        ParseData ParseObj = new ParseData();
 
-        ArrayList<rating> rate_data = new ArrayList<>();
-        ParseData obj2 = new ParseData();
-        obj2.getratingdata(rate_data);
+        List<user> UserData = new ArrayList<>();
+        ParseObj.getuserdata((ArrayList<user>) UserData);
 
-        ArrayList<movie> movie_data = new ArrayList<>();
-        ParseData obj3 = new ParseData();
-        obj3.getMoviedata(movie_data);
+        List<rating> RateData = new ArrayList<>();
+        ParseObj.getratingdata((ArrayList<rating>) RateData);
 
-        genredata genre_data[] = new genredata[20];
-        ParseData obj4 = new ParseData();
-        obj4.getgenredata(genre_data);
+        List<movie> MovieData = new ArrayList<>();
+        ParseObj.getMoviedata((ArrayList<movie>) MovieData);
 
+        genredata GenreData[] = new genredata[20];
+        ParseObj.getgenredata(GenreData);
+
+        Map<Integer, String> MovieMap = new HashMap<Integer, String>();          //creating a map storing movie ids and movie title
+        for (int i=0; i<MovieData.size(); i++){
+            MovieMap.put(MovieData.get(i).movieid, MovieData.get(i).title);
+        }
+
+        ArrayList<Integer> TopMovieByGenre = ParseObj.GetTopMovieByGenre(RateData, MovieData);
+        for (int i=0; i<TopMovieByGenre.size(); i++){
+            System.out.println(MovieMap.get(TopMovieByGenre.get(i)));
+        }
     }
 }
 

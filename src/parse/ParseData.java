@@ -1,5 +1,4 @@
 package parse;
-
 import model.*;
 import java.util.*;
 import java.io.*;
@@ -71,5 +70,39 @@ public class ParseData {
             i++;
         }
     }
+
+    public static ArrayList<Integer> GetTopMovieByGenre (List<rating> RateData, List<movie> MovieData){
+        ArrayList<Integer> TopMovieByGenre = new ArrayList<Integer>(20);
+        for (int i = 0; i < 20; i++) {
+            TopMovieByGenre.add(0);
+        }
+        HashMap<Integer, Pair> AvgRating = new HashMap<Integer, Pair>();
+
+        for(int i=0; i<RateData.size(); i++){
+            int MovieId = RateData.get(i).movieid;
+            if(!AvgRating.containsKey(MovieId)){
+                Pair temp = new Pair();
+                temp.first = 1;
+                temp.second = RateData.get(i).rating;
+                AvgRating.put(MovieId, temp);
+            }
+            AvgRating.get(MovieId).first++;
+            AvgRating.get(MovieId).second += RateData.get(i).rating;
+            AvgRating.get(MovieId).second /= AvgRating.get(MovieId).first;
+        }
+
+        for(int i=0; i<MovieData.size(); i++){
+            int MovieId = MovieData.get(i).movieid;
+            for(int j=0; j<MovieData.get(i).genre.size(); j++){
+                if(MovieData.get(i).genre.get(j)==1){
+                    if(AvgRating.get(MovieId).second > TopMovieByGenre.get(j)){
+                        TopMovieByGenre.set(j, AvgRating.get(MovieId).second);
+                    }
+                }
+            }
+        }
+        return TopMovieByGenre;
+    }
+
 }
 
