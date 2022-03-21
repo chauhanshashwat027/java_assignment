@@ -1,5 +1,7 @@
 package parse;
 import model.*;
+
+import javax.jws.soap.SOAPBinding;
 import java.util.*;
 import java.io.*;
 
@@ -123,39 +125,58 @@ public class ParseData {
         }
         return MaxFreqMovie;
     }
-    public static String MostWatchedGenre (List<rating> RateData, List<movie> MovieData, genredata GenreData[]){
+    public static String MostWatchedGenre (List<rating> RateData, List<movie> MovieData, genredata GenreData[]) {
         int MovieId;
         Map<Integer, Integer> MovieFreq = new HashMap<Integer, Integer>();
-        for (int i=0; i<RateData.size(); i++){
+        for (int i = 0; i < RateData.size(); i++) {
             MovieId = RateData.get(i).movieid;
-            if(!MovieFreq.containsKey(MovieId)){
+            if (!MovieFreq.containsKey(MovieId)) {
                 MovieFreq.put(MovieId, 1);
             }
-            MovieFreq.put(MovieId, MovieFreq.get(MovieId)+1);
+            MovieFreq.put(MovieId, MovieFreq.get(MovieId) + 1);
         }
         Map<String, Integer> GenreFreq = new HashMap<String, Integer>();
-        for (int i=0; i<MovieData.size(); i++){
+        for (int i = 0; i < MovieData.size(); i++) {
             int movieId = MovieData.get(i).movieid;
             int movieFreq = MovieFreq.get(movieId);
 
-            for (int j=0; j<MovieData.get(i).genre.size(); j++){
-                if(MovieData.get(i).genre.get(j)==1){
-                    if(!GenreFreq.containsKey(GenreData[j].genre)){
+            for (int j = 0; j < MovieData.get(i).genre.size(); j++) {
+                if (MovieData.get(i).genre.get(j) == 1) {
+                    if (!GenreFreq.containsKey(GenreData[j].genre)) {
                         GenreFreq.put(GenreData[j].genre, movieFreq);
                     }
-                    GenreFreq.put(GenreData[j].genre, GenreFreq.get(GenreData[j].genre)+movieFreq);
+                    GenreFreq.put(GenreData[j].genre, GenreFreq.get(GenreData[j].genre) + movieFreq);
                 }
             }
         }
         int MaxFreq = 0;
         String MaxFreqGenre = "";
-        for (Map.Entry<String, Integer> entry : GenreFreq.entrySet()){
-            if (entry.getValue() > MaxFreq){
+        for (Map.Entry<String, Integer> entry : GenreFreq.entrySet()) {
+            if (entry.getValue() > MaxFreq) {
                 MaxFreqGenre = entry.getKey();
                 MaxFreq = entry.getValue();
             }
         }
         return MaxFreqGenre;
+    }
+    public static int MostActiveUser (List<rating> RateData){
+        int UserId;
+        Map<Integer, Integer> UserFreq = new HashMap<Integer, Integer>();
+        for(int i=0; i<RateData.size(); i++){
+            UserId = RateData.get(i).userid;
+            if(!UserFreq.containsKey(UserId))
+                UserFreq.put(UserId, 1);
+            UserFreq.put(UserId, UserFreq.get(UserId)+1);
+        }
+        int MaxFreq = 0;
+        int MaxFreqUser = 0;
+        for (Map.Entry<Integer, Integer> entry : UserFreq.entrySet()){
+            if(entry.getValue() > MaxFreq){
+                MaxFreqUser = entry.getKey();
+                MaxFreq = entry.getValue();
+            }
+        }
+        return MaxFreqUser;
     }
 }
 

@@ -35,6 +35,9 @@ public class movie_recommendation{
 
         String MaxFreqGenre = ParseObj.MostWatchedGenre(RateData, MovieData, GenreData);
         System.out.println("Most watched Genre is " + MaxFreqGenre);
+
+        int MaxFreqUser = ParseObj.MostActiveUser(RateData);
+        System.out.println("Most Active User Id is " + MaxFreqUser);
     }
 }
 
