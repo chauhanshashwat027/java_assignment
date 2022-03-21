@@ -29,8 +29,12 @@ public class movie_recommendation{
         for (int i=0; i<TopMovieByGenre.size()-1; i++){
             System.out.println("Top Movie of " + GenreData[i].genre + " " + MovieMap.get(TopMovieByGenre.get(i)));
         }
+
         int MaxFreqMovie = ParseObj.MostWatchedMovie(RateData);
         System.out.println("Most Watched Movie " + MovieMap.get(MaxFreqMovie));
+
+        String MaxFreqGenre = ParseObj.MostWatchedGenre(RateData, MovieData, GenreData);
+        System.out.println("Most watched Genre is " + MaxFreqGenre);
     }
 }
 

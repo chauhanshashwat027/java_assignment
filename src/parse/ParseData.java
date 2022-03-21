@@ -123,5 +123,39 @@ public class ParseData {
         }
         return MaxFreqMovie;
     }
+    public static String MostWatchedGenre (List<rating> RateData, List<movie> MovieData, genredata GenreData[]){
+        int MovieId;
+        Map<Integer, Integer> MovieFreq = new HashMap<Integer, Integer>();
+        for (int i=0; i<RateData.size(); i++){
+            MovieId = RateData.get(i).movieid;
+            if(!MovieFreq.containsKey(MovieId)){
+                MovieFreq.put(MovieId, 1);
+            }
+            MovieFreq.put(MovieId, MovieFreq.get(MovieId)+1);
+        }
+        Map<String, Integer> GenreFreq = new HashMap<String, Integer>();
+        for (int i=0; i<MovieData.size(); i++){
+            int movieId = MovieData.get(i).movieid;
+            int movieFreq = MovieFreq.get(movieId);
+
+            for (int j=0; j<MovieData.get(i).genre.size(); j++){
+                if(MovieData.get(i).genre.get(j)==1){
+                    if(!GenreFreq.containsKey(GenreData[j].genre)){
+                        GenreFreq.put(GenreData[j].genre, movieFreq);
+                    }
+                    GenreFreq.put(GenreData[j].genre, GenreFreq.get(GenreData[j].genre)+movieFreq);
+                }
+            }
+        }
+        int MaxFreq = 0;
+        String MaxFreqGenre = "";
+        for (Map.Entry<String, Integer> entry : GenreFreq.entrySet()){
+            if (entry.getValue() > MaxFreq){
+                MaxFreqGenre = entry.getKey();
+                MaxFreq = entry.getValue();
+            }
+        }
+        return MaxFreqGenre;
+    }
 }
 
