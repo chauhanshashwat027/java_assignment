@@ -103,6 +103,25 @@ public class ParseData {
         }
         return TopMovieByGenre;
     }
-
+    public static int MostWatchedMovie(List<rating> RateData){
+        int MovieId;
+        Map<Integer, Integer> freq = new HashMap<Integer, Integer>();
+        for (int i=0; i<RateData.size(); i++){
+            MovieId = RateData.get(i).movieid;
+            if(!freq.containsKey(MovieId)){
+                freq.put(MovieId, 1);
+            }
+            freq.put(MovieId, freq.get(MovieId)+1);
+        }
+        int MaxFreq = 0;
+        int MaxFreqMovie = 0;
+        for (Map.Entry<Integer, Integer> entry : freq.entrySet()){
+            if (entry.getValue() > MaxFreq){
+                MaxFreqMovie = entry.getKey();
+                MaxFreq = entry.getValue();
+            }
+        }
+        return MaxFreqMovie;
+    }
 }
 
