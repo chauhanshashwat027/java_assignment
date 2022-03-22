@@ -1,7 +1,7 @@
 package parse;
 import model.*;
 
-import javax.jws.soap.SOAPBinding;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.io.*;
 
@@ -81,7 +81,7 @@ public class ParseData {
         HashMap<Integer, Pair> AvgRating = new HashMap<Integer, Pair>();
 
         for(int i=0; i<RateData.size(); i++){
-            int MovieId = RateData.get(i).movieid;
+            Integer MovieId = RateData.get(i).movieid;
             if(!AvgRating.containsKey(MovieId)){
                 Pair temp = new Pair();
                 temp.first = 1;
@@ -177,6 +177,136 @@ public class ParseData {
             }
         }
         return MaxFreqUser;
+    }
+    public static ArrayList<Integer> MovieRecommended (List<rating> RateData, List<movie> MovieData, int UserId) {
+        ArrayList<Integer> WatchedMovie = new ArrayList<>();
+        for (int i = 0; i < RateData.size(); i++) {
+            if (RateData.get(i).userid == UserId)
+                WatchedMovie.add(RateData.get(i).movieid);
+        }
+        Map<Integer, Pair> WatchedMovieRating = new HashMap<>();
+        for (int i = 0; i < WatchedMovie.size(); i++) {
+            int MovieId = WatchedMovie.get(i);
+            for (int j = 0; j < RateData.size(); j++) {
+                if (!WatchedMovieRating.containsKey(MovieId)) {
+                    Pair temp = new Pair();
+                    temp.first = 1;
+                    temp.second = RateData.get(i).rating;
+                    WatchedMovieRating.put(MovieId, temp);
+                }
+                WatchedMovieRating.get(MovieId).first++;
+                WatchedMovieRating.get(MovieId).second += RateData.get(i).rating;
+                WatchedMovieRating.get(MovieId).second /= WatchedMovieRating.get(MovieId).first;
+            }
+        }
+        // Create a list from elements of HashMap
+        List<Map.Entry<Integer, Pair> > list =
+                new LinkedList<Map.Entry<Integer, Pair> >(WatchedMovieRating.entrySet());
+
+        // Sort the list
+        Collections.sort(list, new Comparator<Map.Entry<Integer, Pair> >() {
+            public int compare(Map.Entry<Integer, Pair> o1,
+                               Map.Entry<Integer, Pair> o2)
+            {
+                return (o1.getValue().second).compareTo(o2.getValue().second);
+            }
+        });
+
+        // put data from sorted list to hashmap
+        for (Map.Entry<Integer, Pair> aa : list) {
+            WatchedMovieRating.put(aa.getKey(), aa.getValue());
+        }
+        int size = WatchedMovieRating.size();
+        int loopVariable = 1;
+        ArrayList<Integer> TopWatchedMovie = new ArrayList<>();
+        for (Map.Entry<Integer, Pair> aa : WatchedMovieRating.entrySet()){
+            if(loopVariable <= size/2){
+                TopWatchedMovie.add(aa.getKey());
+            }
+        }
+        Integer TopGenre[] = new Integer[19];
+        for (int i=0; i<TopWatchedMovie.size(); i++){
+            int MovieId = TopWatchedMovie.get(i);
+            for(int j=0; j<MovieData.size(); i++){
+                if(MovieData.get(j).movieid == MovieId){
+                    for(int k=0; k<MovieData.get(j).genre.size(); k++){
+                        if(MovieData.get(j).genre.get(k) == 1){
+                            TopGenre[k] = 1;
+                        }
+                    }
+                }
+            }
+        }
+        Map<Integer, Integer> NotWatchedMovies = new HashMap();
+        for(int i=0; i<MovieData.size(); i++){
+            int MovieId = MovieData.get(i).movieid;
+            boolean flag = false;
+            for (int j=0; j<RateData.size(); j++){
+                if(RateData.get(i).movieid == MovieId){
+                   continue;
+                }
+                flag = true;
+            }
+            if(!flag)
+                NotWatchedMovies.put(MovieId, 1);
+        }
+        List<Integer> NotWatchedMovies2 = new ArrayList<>();
+        for (Map.Entry<Integer, Integer> aa : NotWatchedMovies.entrySet()){
+            NotWatchedMovies2.add(aa.getKey());
+        }
+        ArrayList<Integer> GenreMatchedMovies = new ArrayList<>();
+        for(int i=0; i<NotWatchedMovies2.size(); i++){
+            int MovieId = NotWatchedMovies2.get(i);
+            for(int j=0; j<MovieData.size(); j++){
+                if(MovieData.get(j).movieid == MovieId){
+                    for(int k=0; k<MovieData.get(j).genre.size(); k++){
+                        if(TopGenre[k]==1 && MovieData.get(j).genre.get(k)==1){
+                            GenreMatchedMovies.add(MovieId);
+                        }
+                    }
+                }
+            }
+        }
+        ArrayList<Integer> FinalMovieRecommendation = new ArrayList<>();
+        int TotalMovies = 0;
+        Map<Integer, Pair> TopGenreMovieRating = new HashMap<>();
+        for (int i = 0; i < GenreMatchedMovies.size(); i++) {
+            int MovieId = GenreMatchedMovies.get(i);
+            for (int j = 0; j < RateData.size(); j++) {
+                if (!TopGenreMovieRating.containsKey(MovieId)) {
+                    Pair temp = new Pair();
+                    temp.first = 1;
+                    temp.second = RateData.get(i).rating;
+                    TopGenreMovieRating.put(MovieId, temp);
+                }
+                TopGenreMovieRating.get(MovieId).first++;
+                TopGenreMovieRating.get(MovieId).second += RateData.get(i).rating;
+                TopGenreMovieRating.get(MovieId).second /= TopGenreMovieRating.get(MovieId).first;
+            }
+        }
+        // Create a list from elements of HashMap
+        List<Map.Entry<Integer, Pair> > list2 =
+                new LinkedList<Map.Entry<Integer, Pair> >(TopGenreMovieRating.entrySet());
+
+        // Sort the list
+        Collections.sort(list2, new Comparator<Map.Entry<Integer, Pair> >() {
+            public int compare(Map.Entry<Integer, Pair> o1,
+                               Map.Entry<Integer, Pair> o2)
+            {
+                return (o1.getValue().second).compareTo(o2.getValue().second);
+            }
+        });
+
+        // put data from sorted list to hashmap
+        for (Map.Entry<Integer, Pair> aa : list2) {
+            TopGenreMovieRating.put(aa.getKey(), aa.getValue());
+        }
+        for (Map.Entry<Integer, Pair> aa : TopGenreMovieRating.entrySet()){
+            FinalMovieRecommendation.add(aa.getKey());
+            TotalMovies++;
+            if(TotalMovies >= 5) break;
+        }
+        return FinalMovieRecommendation;
     }
 }
 

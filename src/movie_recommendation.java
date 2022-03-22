@@ -38,6 +38,14 @@ public class movie_recommendation{
 
         int MaxFreqUser = ParseObj.MostActiveUser(RateData);
         System.out.println("Most Active User Id is " + MaxFreqUser);
+
+        ArrayList<Integer> TopMoviesRecommended = new ArrayList<>();
+        int UserID = RateData.get(5).userid;
+        TopMoviesRecommended = ParseObj.MovieRecommended(RateData, MovieData, UserID);
+        System.out.println("Top Movies Recommended for User with User Id : " + UserID + "are");
+        for(int i=0; i<TopMoviesRecommended.size(); i++){
+            System.out.println(MovieMap.get(TopMoviesRecommended.get(i)));
+        }
     }
 }
 

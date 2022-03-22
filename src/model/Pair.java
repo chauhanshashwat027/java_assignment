@@ -1,8 +1,8 @@
 package model;
 
 public class Pair {
-    public int first;       // the first field of a pair
-    public int second;      // the second field of a pair
+    public Integer first;       // the first field of a pair
+    public Integer second;      // the second field of a pair
 
     // Constructs a new pair with specified values
 
